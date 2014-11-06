@@ -20,11 +20,11 @@ var ReactWebpackGenerator = module.exports = function ReactWebpackGenerator(args
 
   this.appPath = this.options.appPath;
 
-  this.hookFor('react-webpack:common', {
+  this.composeWith('react-webpack:common', {
     args: args
   });
 
-  this.hookFor('react-webpack:main', {
+  this.composeWith('react-webpack:main', {
     args: args
   });
 
@@ -32,7 +32,10 @@ var ReactWebpackGenerator = module.exports = function ReactWebpackGenerator(args
     this.installDependencies({ skipInstall: options['skip-install'] });
   });
 
+
   this.pkg = JSON.parse(this.readFileAsString(path.join(__dirname, '../package.json')));
+
+  this.config.save();
 };
 
 util.inherits(ReactWebpackGenerator, yeoman.generators.Base);
@@ -47,6 +50,39 @@ ReactWebpackGenerator.prototype.welcome = function welcome() {
   }
 };
 
+ReactWebpackGenerator.prototype.askForReactRouter = function () {
+  var done = this.async();
+  this.prompt({
+    type    : 'confirm',
+    name    : 'reactRouter',
+    message : 'Would you like to include react-router?',
+    default : true
+  }, function (props) {
+    this.env.options.reactRouter = props.reactRouter;
+    done();
+  }.bind(this));
+};
+
+ReactWebpackGenerator.prototype.askForStylesLanguage = function () {
+  var done = this.async();
+  this.prompt({
+    type    : 'list',
+    name    : 'stylesLanguage',
+    message : 'Which styles language you want to use?',
+    choices: [
+        {name: 'CSS', value: 'css'},
+        {name: 'SASS', value: 'sass'},
+        {name: 'LESS', value: 'less'},
+        {name: 'Stylus', value: 'stylus'}
+    ],
+    default : 'css'
+  }, function (props) {
+    this.env.options.stylesLanguage = props.stylesLanguage;
+    this.config.set('styles-language', props.stylesLanguage);
+    done();
+  }.bind(this));
+};
+
 ReactWebpackGenerator.prototype.readIndex = function readIndex() {
   this.indexFile = this.engine(this.read('../../templates/common/index.html'), this);
 };
@@ -57,16 +93,20 @@ ReactWebpackGenerator.prototype.createIndexHtml = function createIndexHtml() {
 };
 
 ReactWebpackGenerator.prototype.packageFiles = function () {
+  this.reactRouter = this.env.options.reactRouter;
+  this.stylesLanguage = this.env.options.stylesLanguage;
   this.template('../../templates/common/_package.json', 'package.json');
+  this.template('../../templates/common/_webpack.config.js', 'webpack.config.js');
+  this.template('../../templates/common/_webpack.dist.config.js', 'webpack.dist.config.js');
   this.copy('../../templates/common/Gruntfile.js', 'Gruntfile.js');
   this.copy('../../templates/common/gitignore', '.gitignore');
 };
 
 ReactWebpackGenerator.prototype.styleFiles = function styleFiles() {
   var mainFile = 'main.css';
-  var resetFile = 'reset.css';
+  var normalizeFile = 'normalize.css';
   this.copy('styles/' + mainFile, 'src/styles/' + mainFile);
-  this.copy('styles/' + resetFile, 'src/styles/' + resetFile);
+  this.copy('styles/' + normalizeFile, 'src/styles/' + normalizeFile);
 };
 
 ReactWebpackGenerator.prototype.imageFiles = function () {

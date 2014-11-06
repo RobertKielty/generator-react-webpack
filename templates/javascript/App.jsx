@@ -11,7 +11,7 @@ var ReactTransitionGroup = React.addons.TransitionGroup;
 (window !== window.top ? window.top : window).React = React;
 
 // CSS
-require('../../styles/reset.css');
+require('../../styles/normalize.css');
 require('../../styles/main.css');
 
 var imageURL = require('../../images/yeoman.png');
@@ -27,7 +27,7 @@ var <%= scriptAppName %> = React.createClass({
     );
   }
 });
-
-React.renderComponent(<<%= scriptAppName %> />, document.getElementById('content')); // jshint ignore:line
-
+<% if (!reactRouter) {
+%>React.renderComponent(<<%= scriptAppName %> />, document.getElementById('content')); // jshint ignore:line
+<% } %>
 module.exports = <%= scriptAppName %>;

@@ -104,6 +104,13 @@ And `src/styles/Foo.css`:
 }
 ```
 
+## Options
+Options are available as additional installs to the initial application generation phase.
+
+### [ReactRouter](https://github.com/rackt/react-router)
+
+A complete routing library for React. This option only adds the basic hooks to get started with [react router](https://github.com/rackt/react-router).
+
 ## Testing
 
 Running `grunt test` will run the unit tests with karma. Tests are written using [Jasmine](http://pivotal.github.io/jasmine/) by default.
@@ -124,7 +131,7 @@ project
       main.js
     - styles
       main.css
-      reset.css
+      normalize.css
     index.html
   - test
     - spec
@@ -160,7 +167,7 @@ Out the box the [Gruntfile](http://gruntjs.com/api/grunt.file) is configured wit
 
 ### CSS
 
-Included in the project is [Eric Meyer's reset.css](http://meyerweb.com/eric/tools/css/reset/) script. There is also a `src/styles/main.css` script that's required by the core `src/scripts/components/App.js` component using Webpack.
+Included in the project is the [normalize.css](http://necolas.github.io/normalize.css/) script. There is also a `src/styles/main.css` script that's required by the core `src/scripts/components/App.js` component using Webpack.
 
 ### JSHint
 
